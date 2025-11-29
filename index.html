@@ -1,194 +1,959 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marlon A. Ragusta - Shopify VA & Technical Specialist</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Slate 50 background */
-        }
-        .text-gradient {
-            background-image: linear-gradient(to right, #4f46e5, #9333ea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Designer & Store Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-bg: #0a0f1a;
+            --cyan: #00d9ff;
+            --light-text: #e5e7eb;
+            --gray-text: #9ca3af;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--cyan);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 217, 255, 0.2);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor.active {
+            transform: translate(-50%, -50%) scale(0.5);
+            background: var(--cyan);
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), #00ffff);
+            z-index: 10000;
+            transition: width 0.1s ease;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--cyan);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 15, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--light-text) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.3rem;
+            color: var(--gray-text);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--cyan);
+            color: var(--dark-bg);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--cyan);
+        }
+
+        .section-subtitle {
+            color: var(--gray-text);
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .about-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--gray-text);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 217, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
+            border-color: var(--cyan);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-text);
+            font-size: 1rem;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-card {
+            background: rgba(0, 217, 255, 0.03);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            transform-style: preserve-3d;
+        }
+
+        .skill-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.25);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--cyan);
+        }
+
+        .skill-card p {
+            color: var(--gray-text);
+            line-height: 1.8;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: rgba(0, 217, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) rotateX(2deg);
+            border-color: var(--cyan);
+            box-shadow: 0 25px 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2) 0%, rgba(0, 217, 255, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+        }
+
+        .project-content p {
+            color: var(--gray-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--cyan);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 217, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            border-color: var(--cyan);
+            transform: translateX(10px);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            color: var(--cyan);
+        }
+
+        .contact-text {
+            text-align: left;
+        }
+
+        .contact-text h4 {
+            color: var(--light-text);
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-text p {
+            color: var(--gray-text);
+        }
+
+        .contact-text a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            color: var(--gray-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .about-content,
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links { gap: 1.5rem; font-size: 0.9rem; }
+        }
+    </style>
 </head>
-<body class="text-gray-800">
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+    
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="grid-background"></div>
+    </div>
 
-        <header class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">
-                Marlon A. Ragusta
-            </h1>
-            <nav class="space-x-4 hidden sm:block">
-                <a href="#about" class="text-gray-600 hover:text-indigo-600 font-medium transition">About</a>
-                <a href="#experience" class="text-gray-600 hover:text-indigo-600 font-medium transition">Experience</a>
-                <a href="#portfolio" class="text-gray-600 hover:text-indigo-600 font-medium transition">Projects</a>
-                <a href="#contact" class="px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Hire Me</a>
-            </nav>
-        </div>
-    </header>
+    <nav>
+        <div class="container">
+            <div class="logo">Shopify Pro</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <section id="about" class="pt-16 pb-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
-            <div class="md:w-3/5 text-center md:text-left mb-10 md:mb-0">
-                <h2 class="text-lg font-semibold text-indigo-500 uppercase tracking-wider">Shopify Virtual Assistant & E-commerce Specialist</h2>
-                <p class="mt-4 text-4xl sm:text-5xl font-extrabold leading-tight">
-                    Your Shopify Store Setup Expert: <span class="text-gradient">Detailed, Fast, and Flawless Execution.</span>
-                </p>
-                <p class="mt-6 text-xl text-gray-600 max-w-xl mx-auto md:mx-0">
-                    I leverage my deep technical background in engineering and system logic to deliver reliable, system-driven support for launching, managing, and optimizing your Shopify e-commerce operations.
-                </p>
-                <div class="mt-8 flex justify-center md:justify-start space-x-4">
-                    <a href="#contact" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:-translate-y-0.5">
-                        Start a Project
-                    </a>
-                    <a href="#portfolio" class="px-6 py-3 border border-indigo-600 text-indigo-600 font-semibold rounded-xl shadow-lg hover:bg-indigo-50 transition duration-300">
-                        View Skills
-                    </a>
-                </div>
-            </div>
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-subtitle">Shopify Expert</div>
+                <h1>Building High-Converting<br>Shopify Stores</h1>
+                <p class="hero-description">
+                    Specialized in Shopify web design, product research, listing optimization, 
+                    and exceptional customer support to help your business thrive.
+                </p>
+                <a href="#contact" class="cta-button">Let's Work Together</a>
+            </div>
+        </div>
+    </section>
 
-                        <div class="md:w-2/5 flex justify-center">
-                <div class="w-64 h-64 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white overflow-hidden">
-                    <span class="text-7xl text-white font-bold tracking-widest">MAR</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtitle">Turning ideas into profitable online stores</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm a dedicated Shopify specialist with a passion for creating stunning, 
+                    conversion-focused online stores. With expertise in design, product research, 
+                    and customer support, I help businesses establish a strong online presence 
+                    and maximize their sales potential.</p>
+                    <br>
+                    <p>My approach combines creative design with data-driven strategies to 
+                    ensure your store not only looks amazing but also performs exceptionally 
+                    in driving sales and customer satisfaction.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Stores Built</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Products Listed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Client Satisfaction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section id="experience" class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-4">
-                Professional Experience & Technical Competence
-            </h2>
-            <p class="text-center text-xl text-gray-600 mb-12">
-                My background proves meticulous execution, system logic, and attention to detail.
-            </p>
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">What I Do</h2>
+            <p class="section-subtitle">Comprehensive Shopify solutions for your business</p>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🎨</div>
+                    <h3>Shopify Store Design</h3>
+                    <p>Custom, responsive Shopify themes that reflect your brand identity 
+                    and provide seamless user experiences across all devices.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🔍</div>
+                    <h3>Product Research</h3>
+                    <p>In-depth market analysis and trend research to identify winning 
+                    products that align with your niche and target audience.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📝</div>
+                    <h3>Product Listing</h3>
+                    <p>SEO-optimized product descriptions, compelling copy, and strategic 
+                    categorization to maximize visibility and conversions.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">💬</div>
+                    <h3>Customer Support</h3>
+                    <p>Professional customer service management ensuring quick responses, 
+                    problem resolution, and positive customer experiences.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">⚙️</div>
+                    <h3>Store Optimization</h3>
+                    <p>Performance tuning, conversion rate optimization, and continuous 
+                    improvements to drive more sales and revenue.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <h3>Analytics & Reporting</h3>
+                    <p>Data-driven insights and regular performance reports to track growth 
+                    and identify opportunities for improvement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <div class="space-y-12">
-                
-                                <div class="flex flex-col md:flex-row bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-l-4 border-indigo-500">
-                    <div class="md:w-1/4 flex-shrink-0 mb-4 md:mb-0">
-                        <p class="text-lg font-bold text-gray-900">Upwork Freelancer</p>
-                        <p class="text-sm text-gray-500">Embedded Software Engineer</p>
-                    </div>
-                    <div class="md:w-3/4 md:pl-8">
-                        <p class="text-gray-700">A specialized technical role focused on developing and debugging firmware, system logic, and processes for custom devices. This work required intense **systematic problem-solving** to isolate complex software bugs, implement precise logical flows, and ensure high system reliability under strict specifications. This expertise translates directly into the methodical approach needed for **flawless Shopify setup, advanced technical troubleshooting** (e.g., finding Liquid code or app integration conflicts), and creating highly reliable, repeatable processes for client e-commerce operations.</p>
-                    </div>
-                </div>
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-subtitle">Recent stores I've built and optimized</p>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">🛍️</div>
+                    <div class="project-content">
+                        <h3>Fashion Boutique Store</h3>
+                        <p>Complete store redesign with custom theme development, 
+                        product photography integration, and SEO optimization. 
+                        Achieved 150% increase in conversions.</p>
+                        <div class="project-tags">
+                            <span class="tag">Shopify</span>
+                            <span class="tag">Custom Theme</span>
+                            <span class="tag">SEO</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">💎</div>
+                    <div class="project-content">
+                        <h3>Jewelry E-commerce</h3>
+                        <p>Built from scratch with product research, listing optimization, 
+                        and automated customer support system. Generated $50K in first month.</p>
+                        <div class="project-tags">
+                            <span class="tag">Store Setup</span>
+                            <span class="tag">Product Research</span>
+                            <span class="tag">Automation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🏋️</div>
+                    <div class="project-content">
+                        <h3>Fitness Equipment Shop</h3>
+                        <p>Comprehensive product listing for 200+ items, optimized 
+                        descriptions, and customer service setup. Improved search 
+                        rankings by 80%.</p>
+                        <div class="project-tags">
+                            <span class="tag">Product Listing</span>
+                            <span class="tag">Copywriting</span>
+                            <span class="tag">Support</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">🌿</div>
+                    <div class="project-content">
+                        <h3>Organic Skincare Brand</h3>
+                        <p>Custom Shopify store with subscription functionality, 
+                        blog integration, and comprehensive customer support system. 
+                        Built loyal customer base of 5K+.</p>
+                        <div class="project-tags">
+                            <span class="tag">Subscriptions</span>
+                            <span class="tag">Blog Setup</span>
+                            <span class="tag">CRM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                                <div class="flex flex-col md:flex-row bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-l-4 border-indigo-500">
-                    <div class="md:w-1/4 flex-shrink-0 mb-4 md:mb-0">
-                        <p class="text-lg font-bold text-gray-900">NORSU-CEA</p>
-                        <p class="text-sm text-gray-500">College Instructor (Computer Engineering)</p>
-                    </div>
-                    <div class="md:w-3/4 md:pl-8">
-                        <p class="text-gray-700">A specialized academic role focused on translating complex technical concepts (such as system design, algorithms, and networking) into structured, easily understandable curricula. Responsibilities included **detailed project mentorship** (thesis advising), maintaining rigorous quality standards, and developing comprehensive training materials. This background proves expertise in **structured execution, clear communication, and methodical planning**—critical skills for flawless Shopify store setup and management.</p>
-                    </div>
-                </div>
+    <section id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title">Let's Connect</h2>
+                <p class="section-subtitle">Ready to build your dream Shopify store?</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-text">
+                            <h4>Email</h4>
+                            <p><a href="mailto:hello@shopifypro.com">hello@shopifypro.com</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💼</div>
+                        <div class="contact-text">
+                            <h4>LinkedIn</h4>
+                            <p><a href="#">Connect with me</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-text">
+                            <h4>Availability</h4>
+                            <p>Open to new projects</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                                <div class="flex flex-col md:flex-row bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-l-4 border-indigo-500">
-                    <div class="md:w-1/4 flex-shrink-0 mb-4 md:mb-0">
-                        <p class="text-lg font-bold text-gray-900">Independent Service</p>
-                        <p class="text-sm text-gray-500">3D Printer Technician (Klipper + Marlin Flasher)</p>
-                    </div>
-                    <div class="md:w-3/4 md:pl-8">
-                        <p class="text-gray-700">A hands-on technical role specializing in **hardware diagnostics, software configuration, and system optimization** of complex machinery. Expertise centered on implementing custom Klipper and Marlin firmware to dramatically enhance machine precision, speed, and reliability. This position required **meticulous attention to detail** for technical configuration, advanced troubleshooting to isolate complex issues, and the ability to **optimize performance under tight specifications**—skills directly applicable to **flawless store setup and technical problem-solving** in e-commerce.</p>
-                    </div>
-                </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Shopify Pro. Crafted with passion for e-commerce success.</p>
+        </div>
+    </footer>
 
-                                <div class="flex flex-col md:flex-row bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-l-4 border-indigo-500">
-                    <div class="md:w-1/4 flex-shrink-0 mb-4 md:mb-0">
-                        <p class="text-lg font-bold text-gray-900">AREC-DOE</p>
-                        <p class="text-sm text-gray-500">Clerk VI (Affiliated Renewable Energy Center)</p>
-                    </div>
-                    <div class="md:w-3/4 md:pl-8">
-                        <p class="text-gray-700">A rigorous administrative role requiring strict adherence to institutional compliance and government regulations. Key responsibilities included **meticulous management of official documentation**, coordinating inter-departmental schedules, and preparing critical technical and financial reports. This role demonstrates mastery of **structured data handling**, process compliance, and the organizational discipline required for the flawless setup of complex e-commerce systems.</p>
-                    </div>
-                </div>
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+        
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+            requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+        
+        document.addEventListener('mousedown', () => cursor.classList.add('active'));
+        document.addEventListener('mouseup', () => cursor.classList.remove('active'));
+        
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+        
+        // Create Floating Particles
+        function createParticles() {
+            const background = document.querySelector('.background-animation');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 3 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                background.appendChild(particle);
+            }
+        }
+        createParticles();
+        
+        // Animated Counter for Stats
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + (element.dataset.suffix || '');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (element.dataset.suffix || '');
+                }
+            }, 20);
+        }
+        
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-                                <div class="flex flex-col md:flex-row bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-l-4 border-indigo-500">
-                    <div class="md:w-1/4 flex-shrink-0 mb-4 md:mb-0">
-                        <p class="text-lg font-bold text-gray-900">Freelance Services</p>
-                        <p class="text-sm text-gray-500">Laser Engraving, 3D Printing, PCB Design</p>
-                    </div>
-                    <div class="md:w-3/4 md:pl-8">
-                        <p class="text-gray-700">A robust freelance background built on precision technical execution and custom design. This role required absolute mastery of the entire production pipeline, from conceptual CAD/EDA design (using EasyEDA for complex PCB layouts) to physical output via 3D printing and laser engraving. This experience demonstrates **project ownership from concept to final product**, meticulous adherence to specifications, high standards for **quality control**, and comfort working with specialized technical software and components—skills directly transferable to flawless, detail-oriented e-commerce setup.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                        
+                        // Animate counters for stat cards
+                        if (entry.target.classList.contains('stat-card')) {
+                            const number = entry.target.querySelector('.stat-number');
+                            const text = number.textContent;
+                            const value = parseInt(text);
+                            if (!isNaN(value)) {
+                                number.dataset.suffix = text.replace(value, '');
+                                number.textContent = '0';
+                                animateCounter(number, value);
+                            }
+                        }
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
 
-        <section id="portfolio" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-4">
-                Proven Project Portfolio (VA Showcase)
-            </h2>
-            <p class="text-center text-xl text-gray-600 mb-12">
-                Tangible proof of my ability to execute projects from 'Zero to Launch.'
-            </p>
+        // Observe all animated elements
+        document.querySelectorAll('.skill-card, .project-card, .about-content, .stat-card').forEach(el => {
+            observer.observe(el);
+        });
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8">
-                
-                                                                <div class="bg-gray-50 rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300">
-                    <div class="h-48 bg-green-200 flex flex-col items-center justify-center p-4">
-                        <span class="text-3xl font-extrabold text-green-800">LIVE DEMO</span>
-                        <span class="text-sm font-medium text-green-600 mt-1">Shopify Store Setup & Customization</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">TrailPaws Outdoor: LIVE E-commerce Store</h3>
-                        <p class="text-gray-600 mb-4 text-sm">Full manual setup of a high-ticket niche store. Demonstrates theme customization for a rugged brand, policy creation, and complex product variant structuring (e.g., sizing/colors for harnesses).</p>
-                        
-                                                <a href="https://trailpawsoutdoor.myshopify.com/" target="_blank" 
-                            class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-300 mt-2">
-                            Visit Live Store &rarr;
-                        </a>
-                        <p class="text-xs text-red-600 mt-2">
-                            **Access Password:** <code>akosimar</code> (for client review)
-                        </p>
-                    </div>
-                </div>
-                                                                                <div class="bg-gray-50 rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300">
-                    <div class="h-48 bg-blue-200 flex items-center justify-center">
-                        <span class="text-2xl font-bold text-blue-800">Shopify System Integration</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">PawPrintz: Pet Consumables (Mockup)</h3>
-                        <p class="text-gray-600 mb-4 text-sm">Demonstrates expertise in systems integration, including setting up subscription models (using ReCharge logic), managing large, high-volume collections, and executing lead capture funnels (Klaviyo).</p>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">View Store Demo &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        // 3D Tilt Effect for Cards
+        document.querySelectorAll('.project-card, .skill-card, .stat-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
 
-        <section id="contact" class="py-16 bg-indigo-600">
-        <div class="max-w-5xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-extrabold text-white mb-4">
-                Ready to Achieve Flawless Setup?
-            </h2>
-            <p class="text-xl text-indigo-200 mb-8">
-                I'm ready to apply my system-oriented precision to your next Shopify project.
-            </p>
-            <a href="mailto:YOUR_EMAIL@example.com" class="px-8 py-3 bg-white text-indigo-600 font-bold rounded-xl shadow-2xl hover:bg-gray-100 transition duration-300 transform hover:scale-105">
-                Contact Marlon A. Ragusta Now
-            </a>
-            <div class="mt-8 space-x-6 text-indigo-200">
-                <p>Email: <a href="mailto:YOUR_EMAIL@example.com" class="hover:text-white underline">ragustamarlon@gmail.com</a></p>
-                <p>OnlineJobs.ph:https://www.onlinejobs.ph/jobseekers/info/3111889</p>
-            </div>
-        </div>
-    </section>
-
-        <footer class="py-4 bg-gray-900 text-center text-gray-400">
-        <p>&copy; 2025 Marlon A. Ragusta | Technical VA Specialist</p>
-    </footer>
-
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // Magnetic effect for CTA button
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                button.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) translateY(-3px)`;
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = '';
+            });
+        });
+    </script>
 </body>
 </html>
